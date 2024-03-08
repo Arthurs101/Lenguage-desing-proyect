@@ -132,19 +132,21 @@ for item in rgx:
                 elif "^" in operation:
                     peers = []
                     range_to_ignonre =  []
-                    for char in operation:
-                        if char != '-':
-                            peers.append(char)
-                    #ir en parejas de los statments
-                    for z in range(0,2,len(peers)):
-                        if ord(peers[z])> ord(peers[z+1]):
-                            for j in range(ord(peers[z+1]), ord(peers[z]) + 1):
-                                if j <=  ord(peers[z]) - 1:
-                                    range_to_ignonre.append(chr(j))
-                        else:
-                            for j in range(ord(peers[z]), ord(peers[z+1]) + 1):
-                                    range_to_ignonre.append(chr(j))
+                    if "-" in operation:
+                        for char in operation:
+                            if char != '-':
+                                peers.append(char)
+                        #ir en parejas de los statments
+                        for z in range(0,2,len(peers)):
+                            if ord(peers[z])> ord(peers[z+1]):
+                                for j in range(ord(peers[z+1]), ord(peers[z]) + 1):
+                                    if j <=  ord(peers[z]) - 1:
+                                        range_to_ignonre.append(chr(j))
+                            else:
+                                for j in range(ord(peers[z]), ord(peers[z+1]) + 1):
+                                        range_to_ignonre.append(chr(j))
                     else:
+                        operation.replace("~$_escaped_minus_here_$~",'-')
                         t = 0
                         while t < len(operation):
                             if operation[t] != '"':
@@ -205,8 +207,6 @@ for item in rgx:
                         stack.append(p) 
                     else:
                         op += p
-
-# Imprimir los caracteres resultantes
             i += 1
         if len(stack) > 0 :
             statement_rule += "".join(stack)
