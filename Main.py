@@ -89,7 +89,7 @@ for i in range(len(rgx)):
     gen = rgx[i]
 
 universe_set = [chr(i) for i in range(33,127)]
-universe_set.extend([' ','\n','\r','\t'])
+universe_set.extend([' ',"\n","\t"])
 for item in rgx:
     statement_rule = ""
     if type(item) is list:
@@ -157,9 +157,8 @@ for item in rgx:
                     regrex_C = set(universe_set) - set(range_to_ignonre)
                     regrex_C = list(regrex_C)
                     op+= '(' + '|'.join(regrex_C[:-1]) + '|' + regrex_C[-1] + ')'
-
-
                 else:
+                    operation.replace("~$_escaped_minus_here_$~",'-')
                     t = 0
                     while t < len(operation):
                         if operation[t] != '"':
@@ -179,8 +178,10 @@ for item in rgx:
                         while next < len(item) and item[next] != "'":
                             c += item[next]
                             next += 1
-                        if c in ['|','?','+','*','.','(',')','-']:
+                        if c in ['|','?','+','*','.','(',')']:
                             c = '\\' + c
+                        elif c == '-':
+                            c = "~$_escaped_minus_here_$~"
                         if hastostack:
                             stack.append(c)
                         else:
@@ -233,4 +234,4 @@ graficar_arbol(arbol_root_direct)
 evaluate_tree(arbol_root_direct)
 
 afd_direct_rule = afd_directo(arbol_root_direct)
-renderAfd(afd_direct_rule).view()
+# renderAfd(afd_direct_rule).view()
