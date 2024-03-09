@@ -133,7 +133,7 @@ def evaluate_tree(root:NodoAST):
     set_pos(root,alfabeto)
     handle_pos_sets(root)
     handle_followpos(root)
-    return alfabeto
+    return root
 
 def construir_arbol_postfix(expresion) -> NodoAST:
     pila = []

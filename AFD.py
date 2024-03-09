@@ -4,9 +4,9 @@ from AFN import AFNnodo
 from AST import NodoAST
 from graphviz import Digraph
 import ast
-
+from colorama import Fore, Style
 epsi = 'ε'
-
+import sys
 
 #clase representatnte del nodo
 class AFDNode:
@@ -299,7 +299,7 @@ def afd_min(afd:dict):
 
     return min_root
 
-def reconocer_cadena(afd, cadena, rm= False):
+def reconocer_cadena(afd, cadena, rm= False,error= False):
     root = afd
     estado_actual = afd  # Estado inicial
     indice_ultimo_aceptado = -1
@@ -323,6 +323,14 @@ def reconocer_cadena(afd, cadena, rm= False):
             #reset not valid symbol
             if indice_inicio != -1 and indice_ultimo_aceptado != -1: #si realmente es válida la cadena reconocida de momento
                 coincidences.append(cadena[indice_inicio:indice_ultimo_aceptado +1])
+            #error handling:
+            if indice_inicio != -1:
+                reason = ""
+                keys = list(estado_actual.transiciones.keys())
+                for i in range(0, len(keys), 10):
+                    reason+=(" ".join(keys[i:i+10]))+"\n"
+                sys.tracebacklimit = -1
+                raise Exception(f"Segmentation fault: \n got ===_{raw_test}_=== at {cadena[indice_inicio:indice]}{simbolo}\nExpected any of the following: \n {reason}")
             indice_ultimo_aceptado = -1
             indice_inicio = -1
             estado_actual = afd
