@@ -2,6 +2,7 @@ from ast import List
 from AST import construir_arbol_postfix, graficar_arbol,obtener_alfabeto,evaluate_tree,graficar_pos
 from Posfix import PostFix
 from AFD import afd_directo,reconocer_cadena,AFD,renderAfd
+from YalAnalizer import check_syntax
 #Realizar las conversiones
 tokens = set()
 AFDs = {}
@@ -27,17 +28,6 @@ with open("./slr-4.yal",encoding="utf-8") as f:
 for name , afd in AFDs.items():
     #consume and remove the contents for the next afd
     tokens[name] , content = reconocer_cadena(afd.root ,content,True) 
-
-
-# print("----------------------------------------------------------------")
-# print("---------------------------Tookens Found ------------------------")
-# for type, _type in tokens.items():
-#     print(type + ":")
-#     for _ in _type:
-#         print(_)
-#     print("----------------------------------------------------------------")
-# print(content)
-# Diccionario de variables
     
 # Función para tokenizar una entrada
 def tokenizar(entrada, variables):
@@ -61,6 +51,9 @@ def tokenizar(entrada, variables):
 
 
 variables = {}
+
+#check the syntaxis of all before proceeding
+check_syntax(tokens["Variable"],'variable')
 
 for var in tokens["Variable"]:
     id, statement = map(str.strip, var.split("="))
@@ -225,10 +218,8 @@ for item in rgx:
 
     statement_rules[rgx.index(item)] = statement_rule
 rule_str_infix = '(' + "|".join(statement_rules) + ')' + '#'
-print (rule_str_infix)
 #afd directo
 infix_rule_tree_post = PostFix(rule_str_infix)
-print (infix_rule_tree_post)
 arbol_root_direct = construir_arbol_postfix(infix_rule_tree_post)
 graficar_arbol(arbol_root_direct)
 evaluate_tree(arbol_root_direct)

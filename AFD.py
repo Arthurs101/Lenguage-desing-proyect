@@ -299,7 +299,7 @@ def afd_min(afd:dict):
 
     return min_root
 
-def reconocer_cadena(afd, cadena, rm= False,error= False):
+def reconocer_cadena(afd, cadena, rm= False,error_handler= False):
     root = afd
     estado_actual = afd  # Estado inicial
     indice_ultimo_aceptado = -1
@@ -323,8 +323,8 @@ def reconocer_cadena(afd, cadena, rm= False,error= False):
             #reset not valid symbol
             if indice_inicio != -1 and indice_ultimo_aceptado != -1: #si realmente es válida la cadena reconocida de momento
                 coincidences.append(cadena[indice_inicio:indice_ultimo_aceptado +1])
-            #error handling:
-            if indice_inicio != -1:
+            #error handling in case of invalid:
+            if indice_inicio != -1 and error_handler and indice_ultimo_aceptado == -1:
                 reason = ""
                 keys = list(estado_actual.transiciones.keys())
                 for i in range(0, len(keys), 10):

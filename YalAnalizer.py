@@ -1,17 +1,23 @@
 import YalConstants as ylc
-from AST import construir_arbol_postfix, graficar_arbol,obtener_alfabeto,evaluate_tree,graficar_pos
+from AST import construir_arbol_postfix,evaluate_tree
 from Posfix import PostFix
-from AFD import afd_directo,reconocer_cadena,AFD,renderAfd
-
-yalfile = ""
-with open("./slr-4.yal",encoding="utf-8") as f:
-    yalfile = f.read().rstrip("\n")
+from AFD import afd_directo,reconocer_cadena
 
 #create automatas
 commentAFD = afd_directo(evaluate_tree(construir_arbol_postfix(PostFix(ylc.comment))))
+# print(PostFix(ylc.let))
+varAFD = afd_directo(evaluate_tree(construir_arbol_postfix(PostFix(ylc.let))))
 
-comments , yalfile = reconocer_cadena(commentAFD,yalfile,True)
 
-print ('comments found')
-for comment in comments:
-    print (comment)
+def check_syntax(token_list, type_checking):
+    '''Check syntax of all the obtained sections of a yalex file
+    comment: check comment syntax
+    variable: check variable syntax
+    doesn't return anything but if it has bad syntax, it will raise an exception
+    '''
+    if type_checking == 'comment':
+        for token in token_list:
+            reconocer_cadena(commentAFD,token,True,error_handler=True)
+    elif type_checking == 'variable':
+        for token in token_list:
+            reconocer_cadena(varAFD,token,True,error_handler=True)
